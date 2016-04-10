@@ -1,0 +1,224 @@
+{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    {% block title %}
+    {% if title %}
+    {{title}} - {{ g.user.business.business_name }} Invoicing
+    {% else %}
+    {{ g.user.business.business_name }} Invoicing
+    {% endif %}
+    {% endblock %}
+
+    {% block styles %}
+    {{ super() }}
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    {% endblock %}
+
+    {% block metas %}
+    {{ super() }}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ g.user.business.business_name }}">
+    <meta name="author" content="Healy Consulting">
+    <meta name="keywords" content="" />
+    <meta property="og:url" content="{{ url_for('main.index', _external=True) }}" />
+    <meta property="og:title" content="{{ g.user.business.business_name }} Invoicing" />
+    <meta property="og:description" content="{{ g.user.business.business_name }} Invoicing" />
+    {% endblock %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+{% block body %}
+<body>
+
+    <div id="wrapper">
+
+        {% block navbar %}
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">{{ g.user.business.business_name }} Invoicing</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <li>
+                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">View All</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ g.user.first_name }} {{ g.user.last_name }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('main.edit_profile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('main.settings') }}"><i class="fa fa-fw fa-user"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('main.logout') }}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li{% if request.path=='/' %} class="active"{% endif %}>
+                        <a href="{{ url_for('main.index') }}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li{% if request.path=='/client/list' %} class="active"{% endif %}>
+                        <a href="{{ url_for('main.clients') }}"><i class="fa fa-fw fa-user"></i> Clients</a>
+                    </li>
+                    <li{% if '/invoices/' in request.path %} class="active"{% endif %}>
+                        <a href="{{ url_for('main.invoices') }}"><i class="fa fa-fw fa-clock-o"></i> Invoices</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            {{ title }}
+                        </h1>
+                        <ol class="breadcrumb">
+                            {% if request.path=='/' %}
+                            <li class="active">
+                                <i class="fa fa-dashboard"></i> Dashboard
+                            </li>
+                            {% elif request.path=='/client/list' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-user"></i> Clients
+                            </li>
+                            {% elif request.path == '/client/add' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-user"></i> Clients
+                            </li>
+                            {% elif '/client/' in request.path %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li>
+                                <i class="fa fa-user"></i> <a href="{{ url_for('main.clients') }}">Clients</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-user"></i> {{ client.name }}
+                            </li>
+                            {% elif '/invoice/' in request.path %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li>
+                                <i class="fa fa-user"></i> <a href="{{ url_for('main.clients') }}">Clients</a>
+                            </li>
+                            <li>
+                                <i class="fa fa-user"></i> <a href="{{ url_for('main.view_client', client_id = client.id) }}">{{ client.name }}</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-clock-o"></i> Invoice
+                            </li>
+                            {% elif request.path == '/invoices/outstanding' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-clock-o"></i> Outstanding Invoices
+                            </li>
+                            {% elif request.path == '/invoices/overdue' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-clock-o"></i> Overdue Invoices
+                            </li>
+                            {% endif %}
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                {% include "_flash.html" %}
+
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    {% block scripts %}
+    {{ super() }}
+
+    {{ moment.include_moment() }}
+
+    {% endblock %}
+
+{% endblock %}
+</body>
+
+</html>

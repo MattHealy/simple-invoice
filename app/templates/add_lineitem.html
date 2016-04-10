@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+
+                        <form role="form" method="post">
+
+                            {{ form.hidden_tag() }}
+
+                            <label for="name">Item Name</label>
+                            {{ form.name(placeholder="Item Name", class="form-control", required="required" ) }}
+                            {% for error in form.errors.name %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="priceperunit">Price per Unit</label>
+                            {{ form.priceperunit(placeholder="Price Per Unit", class="form-control", required="required" ) }}
+                            {% for error in form.errors.priceperunit %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="units">Units</label>
+                            {{ form.units(placeholder="Units", class="form-control", required="required" ) }}
+                            {% for error in form.errors.units %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                Add
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

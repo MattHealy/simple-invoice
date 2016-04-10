@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <p>Your account is not yet confirmed. Please check your inbox at <strong>{{ g.user.email }}</strong> to find the confirmation email we have sent.</p>
+
+                        <p>Didn't receive the email? <a href="{{ url_for('main.send_confirmation_email') }}">Click here</a> to request another email</a>.</p>
+
+                    </div>
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

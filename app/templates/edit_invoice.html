@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+
+                            <div class="form-group">
+                                <label>Client</label>
+                                <p class="form-control-static">{{ client.name }}</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Invoice Number</label>
+                                <p class="form-control-static">{{ invoice.number }}</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Invoice Date</label>
+                                <p class="form-control-static">{{ moment(invoice.invoicedate).format("Do MMMM YYYY") }}</p>
+                            </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <p class="form-control-static">{{ moment(invoice.duedate).format("Do MMMM YYYY") }}</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Invoice Status</label>
+                                {% if invoice.status == 'final' %}
+                                    <p class="form-control-static text-success">FINAL</p>
+                                {% else %}
+                                    <p class="form-control-static text-danger">DRAFT</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Paid</label>
+                                {% if invoice.paid %}
+                                    <p class="form-control-static text-success">Paid</p>
+                                {% else %}
+                                    <p class="form-control-static text-danger">Not Paid</p>
+                                {% endif %}
+                            </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-8">
+
+                            {% if invoice.lineitems %}
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Item Price</th>
+                                    <th>Item Quantity</th>
+                                    <th style="text-align: right;">Total</th>
+                                    {% if invoice.status == 'draft' %}
+                                    <th style="text-align: right;">Delete</th>
+                                    {% endif %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for lineitem in invoice.lineitems %}
+                                    <tr>
+                                        <td>{{ lineitem.name }}</td>
+                                        <td>${{ "{0:0.2f}".format(lineitem.priceperunit) }}</td>
+                                        <td>{{ lineitem.units }}</td>
+                                        <td align="right">${{ "{0:0.2f}".format(lineitem.priceperunit * lineitem.units) }}</td>
+                                        {% if invoice.status == 'draft' %}
+                                        <td align="right">
+                                               <form method="post" action="{{ url_for('main.delete_lineitem', invoice_id=invoice.id, lineitem_id=lineitem.id) }}">
+                                                   <button type="submit" class="btn btn-danger delete-button" style="display: inline-block"><i class="fa fa-fw fa-trash fa-1"></i></button>
+                                               </form>
+                                        </td>
+                                        {% endif %}
+
+                                    </tr>
+                                {% endfor %}
+                                    <tr>
+                                        <td colspan="2">&nbsp;</td>
+                                        <th>Total</th>
+                                        <td align="right">${{ "{0:0.2f}".format(invoice.sum_total()) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {% endif %}
+
+                            <div class="row">
+                              <div class="col-lg-4">
+                                  {% if invoice.status == 'draft' %}
+                                      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.add_lineitem', invoice_id = invoice.id) }}" role="button">Add Line Item &raquo;</a>
+                                  {% else %}
+                                      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">View Invoice &raquo;</a>
+                                      {% if not invoice.paid %}
+                                      <form action="{{ url_for('main.invoice_paid', invoice_id = invoice.id) }}" method="post">
+                                          <button class="btn btn-lg btn-success btn-block" type="submit">
+                                              Mark as Paid
+                                          </button>
+                                      </form>
+                                      {% endif %}
+                                  {% endif %}
+                              </div>
+                            </div>
+
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+
+                    <div class="col-lg-8">
+
+                        {% if invoice.status == 'draft' %}
+                            {% if invoice.lineitems %}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <form action="{{ url_for('main.finalise_invoice', invoice_id = invoice.id) }}" method="post">
+                                        <button class="btn btn-lg btn-danger btn-block" type="submit">
+                                            Finalise Invoice
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <form action="{{ url_for('main.delete_invoice', invoice_id = invoice.id) }}" method="post">
+                                        <button class="btn btn-lg btn-danger btn-block" type="submit">
+                                            Delete Invoice
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <div class="col-lg-5">
+
+                            <div class="form-group">
+                                <label>Contact Name</label>
+                                <p class="form-control-static">{{ client.contact_firstname }} {{ client.contact_lastname }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <p class="form-control-static">{{ client.contact_email }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Website</label>
+                                <p class="form-control-static"><a href="{{ client.website }}" target="_blank">{{ client.website }}</a></p>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <p class="form-control-static">{{ client.address_line1 }}</p>
+                                <p class="form-control-static">{{ client.address_line2 }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>EFT Reference</label>
+                                <p class="form-control-static">{{ client.eftref }}</p>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.edit_client', client_id = client.id) }}" role="button">Edit Client &raquo;</a>
+                                </div>
+                            </div>
+
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h2>Invoices</h2>
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                               <th>Invoice</th>
+                                               <th>Date</th>
+                                               <th>Total</th>
+                                               <th>Paid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% for invoice in client.invoices %}
+                                            <tr>
+                                               <td><a href="{{ url_for('main.edit_invoice', invoice_id = invoice.id) }}">{{ invoice.number }}</a></td>
+                                               <td>{{ moment(invoice.invoicedate).format("Do MMMM YYYY") }}</td>
+                                               <td>${{ "{0:0.2f}".format(invoice.sum_total()) }}</td>
+                                               <td>
+                                                   {% if invoice.paid %}
+                                                       <span class="form-control-static text-success">Yes</span>
+                                                   {% else %}
+                                                       <span class="form-control-static text-danger">No</span>
+                                                   {% endif %}
+                                               </td>
+                                            </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.add_invoice', client_id = client.id) }}" role="button">Create Invoice &raquo;</a>
+                                </div>
+                            </div>
+                    </div>
+
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

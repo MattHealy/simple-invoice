@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <form role="form" method="post">
+
+                        <div class="col-lg-4">
+
+                            {{ form.hidden_tag() }}
+
+                            <label for="name">Client Name</label>
+                            {{ form.name(placeholder="e.g. Jan's Wedding Cakes", class="form-control", required="required", autofocus="autofocus") }}
+                            {% for error in form.errors.name %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="contact_firstname">Contact First Name</label>
+                            {{ form.contact_firstname(placeholder="e.g. Jan", class="form-control", required="required" ) }}
+                            {% for error in form.errors.contact_firstname %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="contact_lastname">Contact Last Name</label>
+                            {{ form.contact_lastname(placeholder="e.g. Pavlinovich", class="form-control", required="required" ) }}
+                            {% for error in form.errors.contact_lastname %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="contact_email">Email address</label>
+                            {{ form.contact_email(placeholder="e.g. test@gmail.com", class="form-control", required="required") }}
+                            {% for error in form.errors.email %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="website">Website</label>
+                            {{ form.website(placeholder="e.g. http://www.example.com", class="form-control") }}
+                            {% for error in form.errors.website %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label for="address_line1">Address Line 1</label>
+                            {{ form.address_line1(placeholder="e.g. 14 Marvel Way", class="form-control") }}
+                            {% for error in form.errors.address_line1 %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="address_line2">Address Line 2</label>
+                            {{ form.address_line2(placeholder="West Perth, WA 6005", class="form-control") }}
+                            {% for error in form.errors.address_line2 %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="eftref">EFT Reference</label>
+                            {{ form.eftref(placeholder="e.g. JAN", class="form-control") }}
+                            {% for error in form.errors.eftref %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                        {% if form.client_id.data > 0 %}Save{% else %}Add{% endif%}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

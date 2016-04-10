@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <div class="col-lg-4">
+
+                        <form role="form" method="post">
+
+                            {{ form.hidden_tag() }}
+
+                            <div class="form-group">
+                                <label>Client</label>
+                                <p class="form-control-static">{{ client.name }}</p>
+                            </div>
+
+                            <label for="number">Invoice Number</label>
+                            {{ form.number(placeholder="e.g. YYYYMMDD-1", class="form-control", required="required" ) }}
+                            {% for error in form.errors.number %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="invoicedate">Invoice Date</label>
+                            {{ form.invoicedate(placeholder="dd/mm/yyyy", class="form-control", required="required" ) }}
+                            {% for error in form.errors.invoicedate %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="invoicedate">Due Date</label>
+                            {{ form.duedate(placeholder="dd/mm/yyyy", class="form-control", required="required" ) }}
+                            {% for error in form.errors.duedate %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                {% if form.invoice_id.data > 0 %}Edit{% else %}Add{% endif%}
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

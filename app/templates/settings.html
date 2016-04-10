@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+                <div class="row">
+
+                    <form role="form" method="post" enctype="multipart/form-data">
+
+                        <div class="col-lg-4">
+
+                            {{ form.hidden_tag() }}
+
+                            <label for="business_name">Business Name</label>
+                            {{ form.business_name(placeholder="e.g. Bang Design", class="form-control", required="required", autofocus="autofocus") }}
+                            {% for error in form.errors.business_name %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="abn">ABN</label>
+                            {{ form.abn(placeholder="e.g. 12 345 678 910", class="form-control") }}
+                            {% for error in form.errors.abn %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="bsb">BSB</label>
+                            {{ form.bsb(placeholder="e.g. 000-000", class="form-control") }}
+                            {% for error in form.errors.bsb %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="accountnumber">Account Number</label>
+                            {{ form.accountnumber(placeholder="e.g. 0000111", class="form-control") }}
+                            {% for error in form.errors.accountnumber %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="email">Email address</label>
+                            {{ form.email(placeholder="e.g. test@gmail.com", class="form-control", required="required") }}
+                            {% for error in form.errors.email %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="phone">Phone Number</label>
+                            {{ form.phone(placeholder="e.g. 02 1234 1234", class="form-control") }}
+                            {% for error in form.errors.phone %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <label for="logo">Logo</label>
+                            {% if business.logo %}
+                            <p class="form-control-static">Current logo:
+                               <img src="{{ url_for('main.show_upload', filename=business.logo) }}" height="43" />
+                            </p>
+                            {% endif %}
+                            {{ form.logo(placeholder="e.g. Upload your business logo", class="form-control") }}
+                            {% for error in form.errors.logo %}
+                                <span style="color: red;">[{{error}}]</span>
+                            {% endfor %}
+
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+                <!-- /.row -->
+
+{% endblock %}

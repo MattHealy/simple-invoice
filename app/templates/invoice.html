@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" />
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+.height {
+    min-height: 200px;
+}
+
+.icon {
+    font-size: 47px;
+    color: #5CB85C;
+}
+
+.iconbig {
+    font-size: 77px;
+    color: #5CB85C;
+}
+
+.table > tbody > tr > .emptyrow {
+    border-top: none;
+}
+
+.table > thead > tr > .emptyrow {
+    border-bottom: none;
+}
+
+.table > tbody > tr > .highrow {
+    border-top: 3px solid;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-header">
+    <h1>{{ user.business.business_name }}
+        {% if user.business.logo %}
+        <img src="{{ url_for('main.show_upload', filename=user.business.logo) }}" class="pull-right" height="43" />
+        {% endif %}
+    </h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="text-center">
+                <h2>
+                    Invoice {{ invoice.number }}
+                </h2>
+                {% if invoice.status == 'draft' %}
+                    <h3>DRAFT</h3>
+                {% endif %}
+                Issue Date: {{ moment(invoice.invoicedate).format("Do MMMM YYYY") }}
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-6 col-md-3 col-lg-3 pull-left">
+                    <div class="panel panel-default height">
+                        <div class="panel-heading">Billing Details</div>
+                        <div class="panel-body">
+                            <strong>{{ invoice.client.name }}</strong><br>
+                            {{ invoice.client.address_line1 }}<br>
+                            {{ invoice.client.address_line2 }}<br>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-3 col-lg-3">
+                    <div class="panel panel-default height">
+                        <div class="panel-heading">Payment Instructions</div>
+                        <div class="panel-body">
+                            Pay to:<br>
+                            <strong>BSB:</strong> {{ g.user.business.bsb }}<br>
+                            <strong>Account Number:</strong> {{ g.user.business.accountnumber }}<br>
+                            <strong>EFT Reference:</strong> {{ invoice.client.eftref }}<br>
+                            <strong>Payment Due By:</strong> {{ moment(invoice.duedate).format("Do MMMM YYYY") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="text-center"><strong>Invoice summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td><strong>Item Name</strong></td>
+                                    <td class="text-left"><strong>Item Price</strong></td>
+                                    <td class="text-center"><strong>Item Quantity</strong></td>
+                                    <td class="text-right"><strong>Total</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for lineitem in invoice.lineitems %}
+                                <tr>
+                                    <td>{{ lineitem.name }}</td>
+                                    <td class="text-left">${{ "{0:0.2f}".format(lineitem.priceperunit) }}</td>
+                                    <td class="text-center">{{ lineitem.units }}</td>
+                                    <td class="text-right">${{ "{0:0.2f}".format(lineitem.priceperunit * lineitem.units) }}</td>
+                                </tr>
+                            {% endfor %}
+                                <tr>
+                                    <td class="highrow"></td>
+                                    <td class="highrow"></td>
+                                    <td class="highrow text-center"><strong>Subtotal</strong></td>
+                                    <td class="highrow text-right">${{ "{0:0.2f}".format(invoice.sum_total()) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>Total</strong></td>
+                                    <td class="emptyrow text-right">${{ "{0:0.2f}".format(invoice.sum_total()) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>No GST has been charged</strong></td>
+                                    <td class="emptyrow"></td>
+                                </tr>
+                            {% if invoice.paid %}
+                                <tr>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="highrow text-center"><strong>Payment Received</strong></td>
+                                    <td class="highrow text-right">${{ "{0:0.2f}".format(invoice.sum_total()) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>Balance Due</strong></td>
+                                    <td class="emptyrow text-right">$0.00</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+                <div class="col-xs-12 col-md-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Service Provider:</strong> {{ user.business.business_name }}</div>
+                        <div class="panel-body">
+                            <strong>ABN:</strong> {{ user.business.abn }}<br>
+                            <span><strong>Email:</strong> {{ user.business.email }}</span><br>
+                        </div>
+                    </div>
+                </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+{{ moment.include_moment() }}
+
+</body>
+</html>
