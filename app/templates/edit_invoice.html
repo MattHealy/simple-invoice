@@ -100,8 +100,14 @@
                                       <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.add_lineitem', invoice_id = invoice.id) }}" role="button">Add Line Item &raquo;</a>
                                       <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">Preview Invoice &raquo;</a>
                                   {% else %}
-                                      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">View Invoice &raquo;</a>
-                                      {% if not invoice.paid %}
+                                      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">View Invoice &raquo;</a><br />
+                                      {% if invoice.paid %}
+                                      <form action="{{ url_for('main.invoice_unpaid', invoice_id = invoice.id) }}" method="post">
+                                          <button class="btn btn-lg btn-warning btn-block" type="submit">
+                                              Mark as Unpaid
+                                          </button>
+                                      </form>
+                                      {% else %}
                                       <form action="{{ url_for('main.invoice_paid', invoice_id = invoice.id) }}" method="post">
                                           <button class="btn btn-lg btn-success btn-block" type="submit">
                                               Mark as Paid

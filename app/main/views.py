@@ -186,10 +186,21 @@ def invoice_paid(invoice_id):
     invoice = Invoice.query.get_or_404(invoice_id)
     invoice.paid = True
 
-    db.session.add(invoice)
     db.session.commit()
 
     flash('Invoice marked as paid','success')
+    return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
+
+@main.route('/invoice/<int:invoice_id>/unpaid', methods=['POST'])
+@login_required
+def invoice_unpaid(invoice_id):
+
+    invoice = Invoice.query.get_or_404(invoice_id)
+    invoice.paid = False
+
+    db.session.commit()
+
+    flash('Invoice marked as unpaid','success')
     return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
 @main.route('/invoice/<int:invoice_id>/lineitem/add', methods=['GET','POST'])
