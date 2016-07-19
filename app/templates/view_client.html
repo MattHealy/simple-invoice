@@ -29,7 +29,12 @@
                             </div>
                             <div class="form-group">
                                 <label>ABN</label>
-                                <p class="form-control-static">{{ client.abn }}</p>
+                                <p class="form-control-static">
+                                {{ client.abn }}
+                                {% if client.abn %}
+                                <a href="https://abr.business.gov.au/SearchByAbn.aspx?abn={{ client.abn }}" target="_blank">[ABN Lookup]</a>
+                                {% endif %}
+                                </p>
                             </div>
 
                             <br />
