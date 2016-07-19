@@ -79,7 +79,7 @@ class Client(db.Model):
     def status(self):
 
         for invoice in self.invoices:
-            if not invoice.paid and invoice.duedate.replace(tzinfo=pytz.UTC) < datetime.utcnow() and invoice.status=='final':
+            if not invoice.paid and invoice.duedate < datetime.utcnow().replace(tzinfo=pytz.utc) and invoice.status=='final':
                 return "Overdue"
             elif not invoice.paid and invoice.status=='final':
                 return "Outstanding"
