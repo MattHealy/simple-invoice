@@ -189,6 +189,20 @@
                             <li class="active">
                                 <i class="fa fa-clock-o"></i> Overdue Invoices
                             </li>
+                            {% elif request.path == '/invoices/all' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-clock-o"></i> All Invoices
+                            </li>
+                            {% elif request.path == '/invoices/paid' %}
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="{{ url_for('main.index') }}">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-clock-o"></i> Paid Invoices
+                            </li>
                             {% endif %}
                         </ol>
                     </div>
