@@ -3,6 +3,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, HiddenField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Optional, Email
 from flask_wtf.file import FileField, FileAllowed
+from ..models import Invoice
 
 class LoginForm(Form):
     email = TextField('email', validators=[Required(), Email()])
@@ -30,6 +31,21 @@ class InvoiceForm(Form):
     invoicedate = TextField('invoicedate', validators=[Required()])
     duedate = TextField('duedate', validators=[Required()])
     submit = SubmitField('Submit')
+
+    def validate(self):
+
+        rv = Form.validate(self)
+
+        if not rv:
+            return False
+
+        if not self.invoice_id.data:
+            existing = Invoice.query.filter_by(number = self.number.data).first()
+            if existing:
+                self.number.errors.append('This invoice number has already been used')
+                return False
+
+        return True
 
 class LineItemForm(Form):
     lineitem_id = HiddenField('lineitem_id')

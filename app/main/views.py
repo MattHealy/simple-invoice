@@ -155,7 +155,7 @@ def add_invoice(client_id):
         invoicedate = datetime.strptime(form.invoicedate.data, "%d/%m/%Y").date()
         duedate = datetime.strptime(form.duedate.data, "%d/%m/%Y").date()
 
-        invoice = Invoice(clientid=client.id, number = form.number.data, paid = False,
+        invoice = Invoice(clientid = client.id, number = form.number.data, paid = False,
                         invoicedate = invoicedate, status = 'draft', duedate = duedate)
 
         db.session.add(invoice)
