@@ -287,6 +287,14 @@ def overdue_invoices():
 
     return render_template("invoices.html",title='Overdue Invoices',invoices=invoices)
 
+@main.route('/invoices/paid', methods=['GET'])
+@login_required
+def paid_invoices():
+
+    invoices = Invoice.query.filter(Invoice.paid == True).filter(Invoice.invoicedate > (datetime.today() - timedelta(days=30)).date())
+
+    return render_template("invoices.html",title='Paid Invoices (last 30 days)',invoices=invoices)
+
 @main.route('/profile/edit', methods=['GET','POST'])
 @login_required
 def edit_profile():
