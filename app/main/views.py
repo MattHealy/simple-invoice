@@ -126,7 +126,7 @@ def delete_client(client_id):
 
     if client.invoices.count() > 0:
         flash('You cannot delete a client with invoices attached','danger')
-        return redirect(url_for('main.edit_client', client_id = client.id))
+        return redirect(url_for('main.view_client', client_id = client.id))
 
     db.session.delete(client)
     db.session.commit()
