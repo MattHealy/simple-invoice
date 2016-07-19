@@ -18,6 +18,7 @@
     <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
     <!-- Custom Fonts -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui/jquery-ui.css') }}">
 
     {% endblock %}
 
@@ -231,6 +232,20 @@
     {{ super() }}
 
     {{ moment.include_moment() }}
+
+    <script src="{{ url_for('static', filename='jquery-ui/jquery-ui.js') }}"></script>
+
+    <script>
+
+         $(document).ready(function() {
+
+             $(".datepicker-input").datepicker({
+                 dateFormat: "dd/mm/yy"
+             });
+
+         });
+
+    </script>
 
     {% endblock %}
 

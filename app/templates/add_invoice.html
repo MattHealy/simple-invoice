@@ -22,13 +22,13 @@
                             {% endfor %}
 
                             <label for="invoicedate">Invoice Date</label>
-                            {{ form.invoicedate(placeholder="dd/mm/yyyy", class="form-control", required="required" ) }}
+                            {{ form.invoicedate(placeholder="dd/mm/yyyy", class="form-control datepicker-input", required="required" ) }}
                             {% for error in form.errors.invoicedate %}
                                 <span style="color: red;">[{{error}}]</span>
                             {% endfor %}
 
                             <label for="invoicedate">Due Date</label>
-                            {{ form.duedate(placeholder="dd/mm/yyyy", class="form-control", required="required" ) }}
+                            {{ form.duedate(placeholder="dd/mm/yyyy", class="form-control datepicker-input", required="required" ) }}
                             {% for error in form.errors.duedate %}
                                 <span style="color: red;">[{{error}}]</span>
                             {% endfor %}
