@@ -98,6 +98,7 @@
                               <div class="col-lg-4">
                                   {% if invoice.status == 'draft' %}
                                       <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.add_lineitem', invoice_id = invoice.id) }}" role="button">Add Line Item &raquo;</a>
+                                      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">Preview Invoice &raquo;</a>
                                   {% else %}
                                       <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.invoice', invoice_id = invoice.id) }}" target="_blank" role="button">View Invoice &raquo;</a>
                                       {% if not invoice.paid %}
