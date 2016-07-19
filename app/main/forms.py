@@ -20,6 +20,7 @@ class ClientForm(Form):
     address_line1 = TextField('address_line1')
     address_line2 = TextField('address_line2')
     eftref = TextField('eftref')
+    abn = TextField('abn')
     submit = SubmitField('Submit')
 
 class InvoiceForm(Form):

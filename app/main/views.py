@@ -57,7 +57,8 @@ def add_client():
                         insertdate = datetime.utcnow(), website = form.website.data,
                         address_line1 = form.address_line1.data,
                         address_line2 = form.address_line2.data,
-                        eftref = form.eftref.data)
+                        eftref = form.eftref.data,
+                        abn = form.abn.data)
 
         db.session.add(client)
         db.session.commit()
@@ -85,6 +86,7 @@ def edit_client(client_id):
         client.address_line1 = form.address_line1.data
         client.address_line2 = form.address_line2.data
         client.eftref = form.eftref.data
+        client.abn = form.abn.data
 
         db.session.add(client)
         db.session.commit()
@@ -104,6 +106,7 @@ def edit_client(client_id):
     form.address_line1.data = client.address_line1
     form.address_line2.data = client.address_line2
     form.eftref.data = client.eftref
+    form.abn.data = client.abn
 
     return render_template("edit_client.html",title='Edit Client',client=client,form=form)
 
@@ -114,6 +117,22 @@ def view_client(client_id):
     client = Client.query.get_or_404(client_id)
 
     return render_template("view_client.html",client=client,title=client.name)
+
+@main.route('/client/<int:client_id>/delete', methods=['POST'])
+@login_required
+def delete_client(client_id):
+
+    client = Client.query.get_or_404(client_id)
+
+    if client.invoices.count() > 0:
+        flash('Cannot delete client with invoices.')
+        return redirect(url_for('main.edit_client', client_id = client.id))
+
+    db.session.delete(client)
+    db.session.commit()
+
+    flash('Client removed.')
+    return redirect(url_for('main.clients'))
 
 @main.route('/invoice/<int:invoice_id>', methods=['GET'])
 @login_required

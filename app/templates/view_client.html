@@ -27,11 +27,24 @@
                                 <label>EFT Reference</label>
                                 <p class="form-control-static">{{ client.eftref }}</p>
                             </div>
+                            <div class="form-group">
+                                <label>ABN</label>
+                                <p class="form-control-static">{{ client.abn }}</p>
+                            </div>
 
                             <br />
                             <div class="row">
                                 <div class="col-lg-8">
                                     <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('main.edit_client', client_id = client.id) }}" role="button">Edit Client &raquo;</a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <br />
+                                    <form method="post" action="{{ url_for('main.delete_client', client_id=client.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-lg btn-block delete-button">Delete Client</button>
+                                    </form>
                                 </div>
                             </div>
 

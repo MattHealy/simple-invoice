@@ -60,6 +60,7 @@ class Client(db.Model):
     address_line1 = db.Column(db.String(128))
     address_line2 = db.Column(db.String(128))
     eftref = db.Column(db.String(20))
+    abn = db.Column(db.String(64))
 
     def __repr__(self):
         return '<Client %r>' % (self.name)
