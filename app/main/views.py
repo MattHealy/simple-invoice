@@ -63,7 +63,7 @@ def add_client():
         db.session.add(client)
         db.session.commit()
 
-        flash('Client added.')
+        flash('Client added successfully','success')
         return redirect(url_for('main.view_client', client_id = client.id))
 
     return render_template("edit_client.html",title='Add Client',form=form)
@@ -91,7 +91,7 @@ def edit_client(client_id):
         db.session.add(client)
         db.session.commit()
 
-        flash('Client updated.')
+        flash('Client updated successfully','success')
 
         return redirect(url_for('main.view_client', client_id = client.id))
 
@@ -125,13 +125,13 @@ def delete_client(client_id):
     client = Client.query.get_or_404(client_id)
 
     if client.invoices.count() > 0:
-        flash('Cannot delete client with invoices.')
+        flash('You cannot delete a client with invoices attached','danger')
         return redirect(url_for('main.edit_client', client_id = client.id))
 
     db.session.delete(client)
     db.session.commit()
 
-    flash('Client removed.')
+    flash('Client removed successfully','success')
     return redirect(url_for('main.clients'))
 
 @main.route('/invoice/<int:invoice_id>', methods=['GET'])
@@ -161,7 +161,7 @@ def add_invoice(client_id):
         db.session.add(invoice)
         db.session.commit()
 
-        flash('Invoice added.')
+        flash('Invoice added successfully','success')
         return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
     return render_template("add_invoice.html",title='Add Invoice',form=form, client=client)
@@ -176,7 +176,7 @@ def finalise_invoice(invoice_id):
     db.session.add(invoice)
     db.session.commit()
 
-    flash('Invoice finalised.')
+    flash('Invoice marked as finalised','success')
     return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
 @main.route('/invoice/<int:invoice_id>/paid', methods=['POST'])
@@ -189,7 +189,7 @@ def invoice_paid(invoice_id):
     db.session.add(invoice)
     db.session.commit()
 
-    flash('Invoice marked as paid.')
+    flash('Invoice marked as paid','success')
     return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
 @main.route('/invoice/<int:invoice_id>/lineitem/add', methods=['GET','POST'])
@@ -210,7 +210,7 @@ def add_lineitem(invoice_id):
         db.session.add(lineitem)
         db.session.commit()
 
-        flash('Line Item added.')
+        flash('Line item added successfully','success')
         return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
     return render_template("add_lineitem.html",title='Add Line Item',form=form,invoice=invoice,client=invoice.client)
@@ -223,13 +223,13 @@ def delete_lineitem(invoice_id,lineitem_id):
     lineitem = LineItem.query.get_or_404(lineitem_id)
 
     if invoice.status == 'final':
-        flash('Cannot remove item from finalised invoice.')
+        flash('You cannot remove a line item from a finalised invoice','danger')
         return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
     db.session.delete(lineitem)
     db.session.commit()
 
-    flash('Line Item removed.')
+    flash('Line item removed successfully','success')
     return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
 @main.route('/invoice/<int:invoice_id>/delete', methods=['POST'])
@@ -240,17 +240,17 @@ def delete_invoice(invoice_id):
     client_id = invoice.client.id
 
     if invoice.status == 'final':
-        flash('Cannot delete finalised invoices.')
+        flash('You cannot delete a finalised invoice','danger')
         return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
     if invoice.lineitems:
-        flash('Cannot delete invoices with line items.')
+        flash('You cannot delete an invoice with line items','danger')
         return redirect(url_for('main.edit_invoice', invoice_id = invoice.id))
 
     db.session.delete(invoice)
     db.session.commit()
 
-    flash('Invoice deleted.')
+    flash('Invoice deleted successfully','success')
     return redirect(url_for('main.view_client', client_id = client_id))
 
 @main.route('/invoice/<int:invoice_id>/edit', methods=['GET','POST'])
@@ -312,7 +312,7 @@ def edit_profile():
         db.session.add(user)
         db.session.commit()
 
-        flash('Profile updated.')
+        flash('Profile updated successfully','success')
 
         return redirect(url_for('main.index'))
 
@@ -351,7 +351,7 @@ def settings():
         db.session.add(business)
         db.session.commit()
 
-        flash('Settings updated.')
+        flash('Settings updated successfully','success')
 
         return redirect(url_for('main.index'))
 
@@ -378,7 +378,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
-        flash('Invalid username or password.')
+        flash('Invalid username or password','warning')
 
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('main.index'))
@@ -392,7 +392,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out','success')
     return redirect(url_for('main.index'))
 
 @main.route('/forgot', methods=['GET','POST'])
