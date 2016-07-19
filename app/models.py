@@ -3,6 +3,7 @@ from flask import url_for, current_app, request
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime 
+import pytz
 
 class Business(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,7 +57,7 @@ class Client(db.Model):
     contact_lastname = db.Column(db.String(128))
     contact_email = db.Column(db.String(128))
     website = db.Column(db.String(255))
-    insertdate = db.Column(db.DateTime(timezone=True))
+    insertdate = db.Column(db.DateTime)
     invoices = db.relationship('Invoice', lazy='dynamic', backref='client')
     address_line1 = db.Column(db.String(128))
     address_line2 = db.Column(db.String(128))
@@ -78,7 +79,7 @@ class Client(db.Model):
     def status(self):
 
         for invoice in self.invoices:
-            if not invoice.paid and invoice.duedate < datetime.utcnow() and invoice.status=='final':
+            if not invoice.paid and invoice.duedate.replace(tzinfo=pytz.UTC) < datetime.utcnow() and invoice.status=='final':
                 return "Overdue"
             elif not invoice.paid and invoice.status=='final':
                 return "Outstanding"
@@ -89,8 +90,8 @@ class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     clientid = db.Column(db.Integer, db.ForeignKey('client.id'))
     number = db.Column(db.String(64), unique=True)
-    invoicedate = db.Column(db.DateTime(timezone=True))
-    duedate = db.Column(db.DateTime(timezone=True))
+    invoicedate = db.Column(db.DateTime)
+    duedate = db.Column(db.DateTime)
     status = db.Column(db.String(20))
     paid = db.Column(db.Boolean)
     lineitems = db.relationship('LineItem', lazy='joined')
