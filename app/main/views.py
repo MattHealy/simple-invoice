@@ -41,7 +41,7 @@ def index():
 @login_required
 def clients():
 
-    clients = Client.query.order_by(Client.name.desc()).all()
+    clients = Client.query.order_by(Client.name).all()
 
     return render_template("clients.html",title='Clients',clients=clients)
 
