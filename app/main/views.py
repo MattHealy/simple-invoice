@@ -13,8 +13,10 @@ import os
 @login_required
 def index():
 
-    outstandinginvoices = Invoice.query.filter(Invoice.paid == False).filter(Invoice.duedate >= datetime.now())
-    overdueinvoices = Invoice.query.filter(Invoice.paid == False).filter(Invoice.duedate < datetime.now())
+    outstandinginvoices = Invoice.query.filter(Invoice.paid == False).filter(Invoice.duedate >= datetime.now()) \
+                                       .filter(Invoice.status == 'final')
+    overdueinvoices = Invoice.query.filter(Invoice.paid == False).filter(Invoice.duedate < datetime.now()) \
+                                   .filter(Invoice.status == 'final')
     paidinvoices = Invoice.query.filter(Invoice.paid == True).filter(Invoice.invoicedate > (datetime.today() - timedelta(days=30)).date())
 
     outstanding = 0
@@ -39,7 +41,7 @@ def index():
 @login_required
 def clients():
 
-    clients = Client.query.order_by(Client.insertdate.desc()).all()
+    clients = Client.query.order_by(Client.name.desc()).all()
 
     return render_template("clients.html",title='Clients',clients=clients)
 

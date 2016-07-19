@@ -2,6 +2,7 @@ from app import db
 from flask import url_for, current_app, request
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime 
 
 class Business(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +65,25 @@ class Client(db.Model):
 
     def __repr__(self):
         return '<Client %r>' % (self.name)
+
+    @property
+    def last_invoice_date(self):
+        invoice = Invoice.query.filter_by(clientid = self.id).order_by(Invoice.invoicedate.desc()).first()
+        if invoice:
+            return invoice.invoicedate
+        else:
+            return None
+
+    @property
+    def status(self):
+
+        for invoice in self.invoices:
+            if not invoice.paid and invoice.duedate < datetime.now() and invoice.status=='final':
+                return "Overdue"
+            elif not invoice.paid and invoice.status=='final':
+                return "Outstanding"
+
+        return "Fully Paid"
 
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)

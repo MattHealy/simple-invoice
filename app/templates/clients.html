@@ -20,12 +20,43 @@
                         {% if clients %}
 
                                 <div class="col-sm-8">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <tbody>
 
+
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                               <th>Client</th>
+                                               <th>Contact</th>
+                                               <th>Added</th>
+                                               <th>Last Invoice Date</th>
+                                               <th>Status</th>
+                                               <th>View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                         {% for client in clients %}
                                             <tr>
                                                <td><a href="{{ url_for('main.view_client', client_id = client.id) }}">{{ client.name }}</a></td>
+                                               <td>{{ client.contact_firstname }} {{ client.contact_lastname }}</td>
+                                               <td>{{ moment(client.insertdate).format("Do MMMM YYYY") }}</td>
+                                               <td>{% if client.last_invoice_date %}
+                                                   {{ moment(client.last_invoice_date).format("Do MMMM YYYY") }}
+                                                   {% else %}
+                                                   N/A
+                                                   {% endif %}
+                                               </td>
+                                               <td>
+                                                   {% if client.status == 'Overdue' %}
+                                                   <span class="text-danger">
+                                                   {% elif client.status == 'Outstanding' %}
+                                                   <span class="text-warning">
+                                                   {% else %}
+                                                   <span class="text-success">
+                                                   {% endif %}
+                                                   {{ client.status }}
+                                                   </span>
+                                               </td>
+                                               <td><a href="{{ url_for('main.view_client', client_id = client.id) }}">View</a></td>
                                             </tr>
                                         {% endfor %}
 
